@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'fetch' => PDO::FETCH_CLASS,
+//    'fetch' => PDO::FETCH_CLASS,
+    'fetch' => PDO::FETCH_ASSOC,
 
     /*
     |--------------------------------------------------------------------------
@@ -61,12 +62,12 @@ return [
             'driver'    => 'mysql',
             'host'      => env('DB_HOST', 'localhost'),
             'port'      => env('DB_PORT', 3306),
-            'database'  => env('DB_DATABASE', 'forge'),
-            'username'  => env('DB_USERNAME', 'forge'),
+            'database'  => env('DB_DATABASE', 'my_bbs'),
+            'username'  => env('DB_USERNAME', 'root'),
             'password'  => env('DB_PASSWORD', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => env('DB_PREFIX', ''),
+            'prefix'    => env('DB_PREFIX', 'bbs_'),
             'timezone'  => env('DB_TIMEZONE', '+00:00'),
             'strict'    => false,
         ],

@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-docblock/src'),
+    'Wn\\Generators\\' => array($vendorDir . '/wn/lumen-generators/src'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
@@ -22,6 +23,7 @@ return array(
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'Predis\\' => array($vendorDir . '/predis/predis/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Laravel\\Lumen\\' => array($vendorDir . '/laravel/lumen-framework/src'),
     'Illuminate\\View\\' => array($vendorDir . '/illuminate/view'),
@@ -29,6 +31,7 @@ return array(
     'Illuminate\\Translation\\' => array($vendorDir . '/illuminate/translation'),
     'Illuminate\\Support\\' => array($vendorDir . '/illuminate/support'),
     'Illuminate\\Session\\' => array($vendorDir . '/illuminate/session'),
+    'Illuminate\\Redis\\' => array($vendorDir . '/illuminate/redis'),
     'Illuminate\\Queue\\' => array($vendorDir . '/illuminate/queue'),
     'Illuminate\\Pipeline\\' => array($vendorDir . '/illuminate/pipeline'),
     'Illuminate\\Pagination\\' => array($vendorDir . '/illuminate/pagination'),
@@ -51,6 +54,9 @@ return array(
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Common/Inflector'),
+    'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
+    'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib/Doctrine/Common/Annotations'),
+    'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib/Doctrine/Common'),
     'Cron\\' => array($vendorDir . '/mtdowling/cron-expression/src/Cron'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
     'App\\' => array($baseDir . '/app'),

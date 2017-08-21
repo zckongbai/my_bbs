@@ -6,6 +6,15 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'CreatePermissionRoleTable' => $baseDir . '/database/migrations/2017_08_21_061201_create_permission_role_table.php',
+    'CreatePermissionTable' => $baseDir . '/database/migrations/2017_08_19_034022_create_permission_table.php',
+    'CreateReplyTable' => $baseDir . '/database/migrations/2017_08_19_034125_create_reply_table.php',
+    'CreateRolePermissionTable' => $baseDir . '/database/migrations/2017_08_19_034039_create_role_permission_table.php',
+    'CreateRoleTable' => $baseDir . '/database/migrations/2017_08_19_033956_create_role_table.php',
+    'CreateSectionTable' => $baseDir . '/database/migrations/2017_08_19_034058_create_section_table.php',
+    'CreateTopicTable' => $baseDir . '/database/migrations/2017_08_19_034103_create_topic_table.php',
+    'CreateUserRoleTable' => $baseDir . '/database/migrations/2017_08_19_054539_create_user_role_table.php',
+    'CreateUsersTable' => $baseDir . '/database/migrations/2017_08_19_032117_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'ExampleTest' => $baseDir . '/tests/ExampleTest.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
@@ -422,6 +431,7 @@ return array(
     'PHP_Token_XOR_EQUAL' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD_FROM' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
+    'RoleTableSeeder' => $baseDir . '/database/seeds/RoleTableSeeder.php',
     'SebastianBergmann\\Comparator\\ArrayComparator' => $vendorDir . '/sebastian/comparator/src/ArrayComparator.php',
     'SebastianBergmann\\Comparator\\Comparator' => $vendorDir . '/sebastian/comparator/src/Comparator.php',
     'SebastianBergmann\\Comparator\\ComparisonFailure' => $vendorDir . '/sebastian/comparator/src/ComparisonFailure.php',
@@ -461,4 +471,6 @@ return array(
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'UpdateUserTable' => $baseDir . '/database/migrations/2017_08_19_060241_update_user_table.php',
+    'UsersTableSeeder' => $baseDir . '/database/seeds/UsersTableSeeder.php',
 );

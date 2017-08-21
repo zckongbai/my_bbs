@@ -23,6 +23,7 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         ),
         'W' => 
         array (
+            'Wn\\Generators\\' => 14,
             'Webmozart\\Assert\\' => 17,
         ),
         'S' => 
@@ -44,6 +45,7 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Predis\\' => 7,
         ),
         'M' => 
         array (
@@ -60,6 +62,7 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
             'Illuminate\\Translation\\' => 23,
             'Illuminate\\Support\\' => 19,
             'Illuminate\\Session\\' => 19,
+            'Illuminate\\Redis\\' => 17,
             'Illuminate\\Queue\\' => 17,
             'Illuminate\\Pipeline\\' => 20,
             'Illuminate\\Pagination\\' => 22,
@@ -88,6 +91,9 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         array (
             'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\Common\\Inflector\\' => 26,
+            'Doctrine\\Common\\Cache\\' => 22,
+            'Doctrine\\Common\\Annotations\\' => 28,
+            'Doctrine\\Common\\' => 16,
         ),
         'C' => 
         array (
@@ -106,6 +112,10 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+        ),
+        'Wn\\Generators\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wn/lumen-generators/src',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -167,6 +177,10 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Predis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/predis/predis/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -194,6 +208,10 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         'Illuminate\\Session\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/session',
+        ),
+        'Illuminate\\Redis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/redis',
         ),
         'Illuminate\\Queue\\' => 
         array (
@@ -283,6 +301,18 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector',
         ),
+        'Doctrine\\Common\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Doctrine\\Common\\Annotations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
+        ),
+        'Doctrine\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
+        ),
         'Cron\\' => 
         array (
             0 => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron',
@@ -298,6 +328,13 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
     );
 
     public static $prefixesPsr0 = array (
+        'W' => 
+        array (
+            'Way\\Generators' => 
+            array (
+                0 => __DIR__ . '/..' . '/way/generators/src',
+            ),
+        ),
         'P' => 
         array (
             'Prophecy\\' => 
@@ -311,10 +348,31 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
             array (
                 0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
             ),
+            'Doctrine\\DBAL\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
+            ),
+            'Doctrine\\Common\\Lexer\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
+            ),
+            'Doctrine\\Common\\Collections\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/collections/lib',
+            ),
         ),
     );
 
     public static $classMap = array (
+        'CreatePermissionRoleTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_21_061201_create_permission_role_table.php',
+        'CreatePermissionTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034022_create_permission_table.php',
+        'CreateReplyTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034125_create_reply_table.php',
+        'CreateRolePermissionTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034039_create_role_permission_table.php',
+        'CreateRoleTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_033956_create_role_table.php',
+        'CreateSectionTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034058_create_section_table.php',
+        'CreateTopicTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034103_create_topic_table.php',
+        'CreateUserRoleTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_054539_create_user_role_table.php',
+        'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_032117_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'ExampleTest' => __DIR__ . '/../..' . '/tests/ExampleTest.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
@@ -731,6 +789,7 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         'PHP_Token_XOR_EQUAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
+        'RoleTableSeeder' => __DIR__ . '/../..' . '/database/seeds/RoleTableSeeder.php',
         'SebastianBergmann\\Comparator\\ArrayComparator' => __DIR__ . '/..' . '/sebastian/comparator/src/ArrayComparator.php',
         'SebastianBergmann\\Comparator\\Comparator' => __DIR__ . '/..' . '/sebastian/comparator/src/Comparator.php',
         'SebastianBergmann\\Comparator\\ComparisonFailure' => __DIR__ . '/..' . '/sebastian/comparator/src/ComparisonFailure.php',
@@ -770,6 +829,8 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
         'TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
+        'UpdateUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_060241_update_user_table.php',
+        'UsersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UsersTableSeeder.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
