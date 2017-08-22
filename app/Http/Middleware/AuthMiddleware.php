@@ -7,6 +7,7 @@ use App\Models\RolePermission;
 use FastRoute\Route;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UserController;
+use App\Events\InitUserEvent;
 use Closure;
 use Cache;
 use Log;
@@ -22,8 +23,13 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // 用户信息初始化
-        UserController::initUser($request);
+        // 用户信息初始化事件
+        // UserController::initUser($request);
+        // 改为事件
+        if (!session('role_id')){
+            event(new InitUserEvent());
+        }
+
         DB::enableQueryLog();
 
         /**

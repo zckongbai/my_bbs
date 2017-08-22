@@ -37,6 +37,8 @@ $app->get('user/getReplies', 'UserController@getReplies');
 $app->get('user/sendReplies', 'UserController@sendReplies');
 $app->get('user/topics', 'UserController@topics');
 
+$app->get('user/event', 'UserController@eventTest');
+
 /**
  * home
  */

@@ -8,10 +8,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TopicEvent;
 use App\Models\Topic;
 use App\Models\Reply;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Jobs\UpdateTopicJob;
 use Validator;
 use Cache;
 use Log;
@@ -24,15 +26,28 @@ class TopicController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * 查看
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Laravel\Lumen\Http\Redirector
+     */
     public function get(Request $request, $id)
     {
         if (!$id){
             return redirect('404');
         }
+
         $topic = Topic::find($id);
-        // 更新浏览数
-        $topic->click_number++;
-        $topic->save();
+       // // 更新浏览数
+       // $topic->click_number++;
+       // $topic->save();
+
+       // 事件方式 更新
+        event(new TopicEvent($topic, 'get'));
+
+       // // job方式 更新
+       // $this->dispatch(new UpdateTopicJob($topic));
 
         return view('topic.get', ['topic'=>$topic]);
     }
@@ -64,16 +79,18 @@ class TopicController extends Controller
             ]);
 
             if ($topic){
-                // 更新板块发帖数
-                $section = \App\Models\Section::find($topic->section_id);
-                $section->topic_number++;
-                $section->save();
+               // // 更新板块发帖数
+               // $section = \App\Models\Section::find($topic->section_id);
+               // $section->topic_number++;
+               // $section->save();
 
-                Log::info('user add topic', [
-                    'id' => $topic->id,
-                    'section_id' => $topic->section_id,
-                    'topic_number' => $section->topic_number
-                ]);
+               // Log::info(
+               //     'user add topic',
+               //     ['id' => $topic->id, 'section_id' => $topic->section_id, 'topic_number' => $section->topic_number]
+               // );
+
+                // 事件方式 更新板块发帖数
+                event(new TopicEvent($topic, 'add'));
 
                 return redirect(url('topic', ['id'=>$topic->id]));
             }
@@ -127,7 +144,6 @@ class TopicController extends Controller
         $topic->save();
 
         return redirect(url('topic', ['id'=>$topic->id]));
-        return redirect()->route('topic', ['id'=>$topic->id]);
     }
 
     public function update(Request $request)

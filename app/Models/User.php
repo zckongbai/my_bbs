@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Validator;
 
 class User extends Model {
 
+    protected $table = 'users';
     protected $fillable = ['name', 'email', 'role_id', 'password', 'salt'];
 
     protected $dates = ['delete_at'];
@@ -13,8 +15,10 @@ class User extends Model {
     public static $rules = [
         // Validation rules
         'name'  =>  'required|max:32',
-        'email' =>  'required|email|unique',
+        'email' =>  'required|email|unique:users',
     ];
+
+    const VISITOR_NAME = 'visitor';
 
     // Relationships
 
@@ -49,8 +53,17 @@ class User extends Model {
     {
         return $this->hasManyThrough(
           'App\Models\Reply', 'App\Models\Topic',
-                'user_id', 'topic_id'
+                'user_id'
         );
+    }
+
+    public function isValid()
+    {
+        $validator = Validator::make($this->getAttributes(), self::$rules);
+        if ($validator->fails()){
+            return false;
+        }
+        return true;
     }
 
 }

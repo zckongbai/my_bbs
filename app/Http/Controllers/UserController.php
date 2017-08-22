@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 use Cache;
 use Log;
+use App\Events\UserLoginEvent;
+
 
 class UserController extends Controller
 {
@@ -25,6 +27,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         if ('POST' == $request->getMethod()){
+
             $this->validate($request, [
                 'name'  =>  'required',
                 'email' => 'required|email|unique:users',
@@ -46,7 +49,11 @@ class UserController extends Controller
             $user = User::create($data);
             if ($user){
                 // 更新session
-                self::cacheUserInfo($request, $user->id);
+                // self::cacheUserInfo($request, $user->id);
+
+                // 改成事件
+                event(new \App\Events\UserRegisterEvent($user));
+
                 return redirect('user');
             }
 
@@ -111,9 +118,13 @@ class UserController extends Controller
             }
 
             // session
-            self::cacheUserInfo($request, $user->id);
+            // self::cacheUserInfo($request, $user->id);
+            // 改成登录事件
+            event(new UserLoginEvent($user));
+
             // write log
             Log::info('user login:success', ['time' => date('Y-m-d H:i:s'), 'ip' => $request->getClientIp()]);
+
             // back url
             $redirectUrl = session()->pull('backUrl', url('user/index'));
             return redirect($redirectUrl);
@@ -123,12 +134,13 @@ class UserController extends Controller
     }
 
     /**
+     * 改成事件后 废弃
      * 初始化用户信息 : 游客
      * @param Request $request
      */
     public static function initUser(Request $request)
     {
-        if ($request->session()->get('is_login') || $request->session()->get('name') == 'visitor')
+        if ($request->session()->get('is_login') || $request->session()->get('name') == User::VISITOR_NAME)
         {
             return true;
         }
@@ -136,13 +148,14 @@ class UserController extends Controller
     }
 
     /**
+     * 改成事件后 废弃
      * 缓存用户信息
      * @param Request $request
      * @param string $id
      * @param string $roleName
      * @return bool
      */
-    protected static function cacheUserInfo(Request $request, $id='', $roleName='visitor')
+    protected static function cacheUserInfo(Request $request, $id='', $roleName = User::VISITOR_NAME)
     {
         if ($id){
             $user = User::find($id);
@@ -174,8 +187,12 @@ class UserController extends Controller
      */
     public function logout(Request $request)
     {
-        setcookie('session', session_id(), time()-1);
-        $request->session()->flush();
+        // setcookie('session', session_id(), time()-1);
+        // $request->session()->flush();
+
+        // 改成事件
+        event(new \App\Events\UserLogoutEvent());
+
         return view('user.logout');
     }
 
@@ -210,7 +227,7 @@ class UserController extends Controller
     public function getReplies(Request $request)
     {
         $replies = User::find(session('uid'))->getReplies()->paginate(10);
-//        var_dump(DB::getQueryLog());
+       // var_dump(DB::getQueryLog());
         return view('user.getReplies', ['replies'=>$replies]);
     }
 

@@ -6,10 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'CreateJobsTable' => $baseDir . '/database/migrations/2017_08_22_032402_create_jobs_table.php',
     'CreatePermissionRoleTable' => $baseDir . '/database/migrations/2017_08_21_061201_create_permission_role_table.php',
     'CreatePermissionTable' => $baseDir . '/database/migrations/2017_08_19_034022_create_permission_table.php',
     'CreateReplyTable' => $baseDir . '/database/migrations/2017_08_19_034125_create_reply_table.php',
-    'CreateRolePermissionTable' => $baseDir . '/database/migrations/2017_08_19_034039_create_role_permission_table.php',
     'CreateRoleTable' => $baseDir . '/database/migrations/2017_08_19_033956_create_role_table.php',
     'CreateSectionTable' => $baseDir . '/database/migrations/2017_08_19_034058_create_section_table.php',
     'CreateTopicTable' => $baseDir . '/database/migrations/2017_08_19_034103_create_topic_table.php',
