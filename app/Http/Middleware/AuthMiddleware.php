@@ -20,8 +20,6 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $before = new BeforeMiddleware();
-        $before->handle($request, $next);
 
         // 用户信息初始化事件
         // UserController::initUser($request);
