@@ -3,13 +3,10 @@
 namespace App\Http\Middleware;
 
 use App\Models\Role;
-use App\Models\RolePermission;
 use FastRoute\Route;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UserController;
 use App\Events\InitUserEvent;
 use Closure;
-use Cache;
 use Log;
 
 class AuthMiddleware
@@ -23,6 +20,9 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $before = new BeforeMiddleware();
+        $before->handle($request, $next);
+
         // 用户信息初始化事件
         // UserController::initUser($request);
         // 改为事件
@@ -30,16 +30,15 @@ class AuthMiddleware
             event(new InitUserEvent());
         }
 
-        DB::enableQueryLog();
-
         /**
          * $uses : UserController@index
          */
         $uses = $request->route()[1]['uses'];
         $uses = substr(strrchr($uses, '\\'), 1);
 
-        $has = Role::find(session('role_id'))->permissions()->where('uses', $uses)->first();
+        Log::info('auth handle', ['uses' => $uses, 'role_id' => session('role_id'), 'ip' => $request->getClientIp()]);
 
+        $has = Role::find(session('role_id'))->permissions()->where('uses', $uses)->first();
         if (!$has){
             // 查看是否需要登录
             $userHas = Role::where('name', 'user')->first()->permissions()->where('uses', $uses)->first();

@@ -9,6 +9,7 @@
 <body>
 
 <form id="sectionAddFm"  action="<?php echo url('section/add');?>" method="POST">
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
     板块名称: <input type="name" id="secName" name="name" /><span id="inputNameError">
         <?php echo isset($error) ? $error->name[0] : ''; ?></span><br />
     <input type="submit" value="添加" />

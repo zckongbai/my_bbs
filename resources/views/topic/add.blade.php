@@ -13,6 +13,8 @@
 
 <form id="topicAddFm" action="<?php echo url('topic/add');?>" method="POST">
 
+    <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+
     板块:
     <select name="section_id">
         @foreach ($sections as $section)

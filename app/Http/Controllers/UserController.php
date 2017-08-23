@@ -110,11 +110,11 @@ class UserController extends Controller
             $user = User::where('email', $request->input('email'))->first();
 
             if (!$user){
-                return redirect('user/login')->withErrors(['message'=>'nobody! check email!'])->withInput();
+                return redirect('user/login')->withErrors(['message'=>'nobody! check email!'])->withInput($request->except('password'));
             }
 
             if ($user->password !== md5($request->input('password') . $user->salt)){
-                return redirect('user/login')->withErrors(['message'=>'password error!'])->withInput();
+                return redirect('user/login')->withErrors(['message'=>'password error!'])->withInput($request->except(['password']));
             }
 
             // session

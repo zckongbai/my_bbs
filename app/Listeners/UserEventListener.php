@@ -56,7 +56,6 @@ class UserEventListener
     public function onInitUser($event)
     {
         if (!session('is_login') && !session('role_name')){
-            echo "this is onInitUser<br/>";
             $this->cacheUserInfo();
         }
     }

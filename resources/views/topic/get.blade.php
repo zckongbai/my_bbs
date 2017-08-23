@@ -21,7 +21,7 @@
     </div>
     <!-- 帖子内容end -->
 
-    @if(count($topic->replies) > 1)
+    @if(count($topic->replies) > 0)
     <!-- 回贴列表begin -->
     <div>
         <u>回复列表</u>
@@ -50,6 +50,7 @@
     <div>
         <u>发表回复</u>
         <form action="{{ url('topic/reply') }}" method="post" onsubmit="return checkFm();">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <input type="hidden" name="topic_id" value="{{ $topic->id }}">
             <textarea name="content" id="content" cols="30" rows="10"></textarea> <span id="conError"></span>
             <br>

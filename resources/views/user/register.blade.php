@@ -11,14 +11,11 @@
     <p>注册。</p>
 
     <form id="registerFm" action="" method="post">
-        名称: <input type="text" name="name" id="name" /><br />
-
-        邮箱: <input type="email" name="email" id="email" /><br />
-
+        <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+        名称: <input type="text" name="name" id="name" value="{{ old('name') }}" /><br />
+        邮箱: <input type="email" name="email" id="email" value="{{ old('email') }}" /><br />
         密码: <input type="password" minlength="6" maxlength="32" name="password" id="password"><br/>
-
         确认密码: <input type="password" minlength="6" maxlength="32" name="surePassword" id="surePassword"><br/>
-
         <input type="button" onclick="register()" value="注册" id="registerBtn" />
     </form>
         @if (count($errors) > 0)
