@@ -16,7 +16,6 @@
         <form id="loginFm" action="" method="post">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             邮箱: <input type="email" name="email" id="email" value="{{ $email or ''}}" /><br />
-            {{--邮箱: <input type="email" name="email" id="email" value="{{ old('email') }}" /><br />--}}
             密码: <input type="password" minlength="6" maxlength="32" name="password" id="password"><br/>
             <input type="button" onclick="login()" value="登录" id="loginBtn" />
         </form>
@@ -48,8 +47,7 @@
         if (false == checkForm()) {
             return false;
         }
-        $('#loginFm').submit();
-        return;
+        return $('#loginFm').submit();
 
         if ($('#loginBtn').val() == "登录") {
             $('#loginBtn').val('正在登录');
@@ -61,8 +59,7 @@
                 success: function (msg) {
                     alert(msg.message);
                     if (msg.code && msg.code == '0'){
-                        window.location.href = msg.redirectUrl;
-                        return;
+                        return window.location.href = msg.redirectUrl;
                     }
                 }
             });

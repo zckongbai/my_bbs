@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 class AdminController extends Controller {
 
 
@@ -9,9 +11,9 @@ class AdminController extends Controller {
         return __CLASS__;
     }
 
-    public function login()
+    public function login(Request $request)
     {
-        session()->put('user_id', 3);
-        return redirect('admin');
+        session()->put('backUrl', url('home'));
+        return redirect('home');
     }
 }

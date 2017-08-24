@@ -16,7 +16,7 @@
         <div>
             <dl>
                 @foreach($sections as $section)
-                <dt><a href="#">{{ $section['name'] }}</a></dt>
+                <dt><a href="{{ route('section/topics', ['id'=>$section->id]) }}">{{ $section['name'] }}</a></dt>
 
                     @if($section->topics)
                         @foreach($section->topics->sortByDesc('click_number') as $topic)

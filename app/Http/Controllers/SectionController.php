@@ -9,10 +9,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Validator;
-use Cache;
 use Log;
 
 class SectionController extends Controller
@@ -25,25 +23,19 @@ class SectionController extends Controller
     {
         if ($request->isMethod('post')) {
 
-            $input = $request->all();
-            if (empty($input)){
-                return $this->view('section.add')->withErrors(['form' => '表单不能为空']);
-            }
-            $validator = Validator::make($input, [
+            $this->validate($request, [
                 'name' => 'required|max:64|unique:section',
             ]);
 
-            if ($validator->fails()) {
-                return $this->view('section.add', ['error' => $validator->errors()]);
-            }
+            $section = new Section;
+            $section->name = $request->input('name');
+            $result = $section->save();
 
-            $section = Section::create($input);
-
-            if ($section){
-                Log::info('section add success', ['operator' => $this->user->id, 'input' => $input]);
-                return $this->view('section/index');
+            if ($result){
+                Log::info('section add success', ['operator' => $this->user->id, ['section'=>$section->toArray()]]);
+                return redirect('section');
             }
-            return $this->view('section/add')->withErrors(['form' => '失败'])->withInput();
+            return $this->view('section.add')->withErrors(['errors' => '失败']);
         }
         return $this->view('section.add');
     }
@@ -53,12 +45,18 @@ class SectionController extends Controller
         $section = Section::find($id);
         if ($request->isMethod('post')){
             $input = $request->all();
-            $validator = VAlidator::make($input, [
+            $validator = Validator::make($input, [
                 'name' => 'required|max:64|unique:section',
             ]);
             if ($validator->fails()){
                 return $this->view('section.update')->withErrors($validator);
             }
+
+            $section->name = $input['name'];
+            $section->save();
+
+            return redirect(url('section', ['id'=>$section->id]));
+
         }
         return $this->view('section.update', ['section' => $section]);
     }
@@ -68,11 +66,24 @@ class SectionController extends Controller
     }
     public function index(Request $request)
     {
-
+        $sections = Section::paginate(10);
+        return $this->view('section.index', ['sections'=>$sections]);
     }
 
-    public static function getAll()
+    public function get($id)
     {
+        $section = Section::find($id);
+        return $this->view('section.get', ['section'=>$section]);
     }
 
+    /**
+     * 板块下面的帖子
+     * @param $id
+     * @return \Illuminate\View\View
+     */
+    public function topics($id)
+    {
+        $topics = Section::find($id)->topics()->paginate(10);
+        return $this->view('section.topics', ['topics'=>$topics]);
+    }
 }

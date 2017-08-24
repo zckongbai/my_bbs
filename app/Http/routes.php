@@ -44,9 +44,15 @@ $app->group(['namespace' => 'App\Http\Controllers', ['middleware' => 'auth']], f
     $app->get('admin/login', 'AdminController@login');
     $app->post('admin/login', 'AdminController@login');
 
+    /**
+     * section
+     */
+    $app->get('section', ['uses'=>'SectionController@index']);
+    $app->get('section/{id}/topics', ['uses'=>'SectionController@topics', 'as'=>'section/topics']);
+
 });
 
-$app->group(['middleware'=>'auth', 'namespace' => 'App\Http\Controllers'],function ($app){
+$app->group(['middleware'=>'user', 'namespace' => 'App\Http\Controllers'],function ($app){
 
     /**
      * user
@@ -59,18 +65,6 @@ $app->group(['middleware'=>'auth', 'namespace' => 'App\Http\Controllers'],functi
     $app->get('user/getReplies', 'UserController@getReplies');
     $app->get('user/sendReplies', 'UserController@sendReplies');
     $app->get('user/topics', 'UserController@topics');
-
-    $app->get('user/event', 'UserController@eventTest');
-
-
-    /**
-     * section
-     */
-    $app->get('section/index', ['uses'=>'SectionController@index']);
-    $app->get('section/add', ['uses'=>'SectionController@add']);
-    $app->post('section/add', ['uses'=>'SectionController@add']);
-    $app->post('section/update', ['uses'=>'SectionController@update']);
-    $app->get('section/{id}/delete', ['uses'=>'SectionController@delete', 'as'=>'section/{id}/delete']);
 
     /**
      * topic
@@ -101,18 +95,21 @@ $app->group(['middleware' => 'admin', 'namespace' => 'App\Http\Controllers'], fu
     $app->post('permission/update', ['uses'=>'PermissionController@update']);
     $app->get('permission/{id}/delete', ['uses'=>'PermissionController@delete']);
 
-    $app->get('role/index', ['uses'=>'RoleController@index']);
+    /**
+     * role
+     */
+    $app->get('role', ['uses'=>'RoleController@index']);
     $app->get('role/add', ['uses'=>'RoleController@add']);
     $app->post('role/add', ['uses'=>'RoleController@add']);
     $app->post('role/update', ['uses'=>'RoleController@update']);
     $app->get('role/{id}/delete', ['uses'=>'RoleController@delete']);
-});
 
-// /**
-//  * Routes for resource topic
-//  */
-// $app->get('topic', 'TopicsController@all');
-// $app->get('topic/{id}', 'TopicsController@get');
-// $app->post('topic', 'TopicsController@add');
-// $app->put('topic/{id}', 'TopicsController@put');
-// $app->delete('topic/{id}', 'TopicsController@remove');
+    /**
+     * section
+     */
+    $app->get('section/add', ['uses'=>'SectionController@add']);
+    $app->post('section/add', ['uses'=>'SectionController@add']);
+    $app->post('section/{id}/update', ['uses'=>'SectionController@update', 'as'=>'section/update']);
+    $app->get('section/{id}/delete', ['uses'=>'SectionController@delete', 'as'=>'section/delete']);
+    $app->get('section/{id}', ['uses'=>'SectionController@get']);
+});
