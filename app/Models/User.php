@@ -7,7 +7,7 @@ use Validator;
 
 class User extends Model {
 
-    protected $table = 'users';
+    protected $table = 'user';
     protected $fillable = ['name', 'email', 'role_id', 'password', 'salt'];
 
     protected $dates = ['delete_at'];
@@ -28,7 +28,7 @@ class User extends Model {
      */
     public function role()
     {
-        return $this->belongsTo('App\Models\Role');
+        return $this->hasOne('App\Models\Role', 'id', 'role_id');
     }
 
     /**
@@ -49,6 +49,10 @@ class User extends Model {
         return $this->hasMany('App\Models\Topic');
     }
 
+    /**
+     * 收到的回复
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function getReplies()
     {
         return $this->hasManyThrough(
@@ -57,13 +61,18 @@ class User extends Model {
         );
     }
 
-    public function isValid()
+    /**
+     * @param $id
+     * @param $permission
+     * @return bool
+     */
+    public function checkPermissionByUses($uses)
     {
-        $validator = Validator::make($this->getAttributes(), self::$rules);
-        if ($validator->fails()){
-            return false;
+        // 检查是不是网管
+        if ($this->role->isRoot()){
+            return true;
         }
-        return true;
+        return $this->role->permissions()->where('uses', $uses)->first() ? true : false;
     }
 
 }

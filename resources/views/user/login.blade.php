@@ -15,7 +15,8 @@
     <div>
         <form id="loginFm" action="" method="post">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-            邮箱: <input type="email" name="email" id="email" value="{{ old('email') }}" /><br />
+            邮箱: <input type="email" name="email" id="email" value="{{ $email or ''}}" /><br />
+            {{--邮箱: <input type="email" name="email" id="email" value="{{ old('email') }}" /><br />--}}
             密码: <input type="password" minlength="6" maxlength="32" name="password" id="password"><br/>
             <input type="button" onclick="login()" value="登录" id="loginBtn" />
         </form>
@@ -25,12 +26,13 @@
 
     <!-- 错误信息 begin-->
     <div class="alert alert-danger">
+        @if(isset($errors))
         <ul>
-            @forelse ($errors->all() as $error)
+            @foreach($errors->all() as $error)
                 <li>{{ $error }}</li>
-            @empty
-            @endforelse
+            @endforeach
         </ul>
+        @endif
     </div>
     <!-- 错误信息 end -->
 @endsection

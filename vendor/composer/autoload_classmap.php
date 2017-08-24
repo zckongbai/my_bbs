@@ -6,15 +6,14 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'CreateJobsTable' => $baseDir . '/database/migrations/2017_08_22_032402_create_jobs_table.php',
+    'CreateJobsTable' => $baseDir . '/database/migrations/2017_08_22_032402_create_job_table.php',
     'CreatePermissionRoleTable' => $baseDir . '/database/migrations/2017_08_21_061201_create_permission_role_table.php',
     'CreatePermissionTable' => $baseDir . '/database/migrations/2017_08_19_034022_create_permission_table.php',
     'CreateReplyTable' => $baseDir . '/database/migrations/2017_08_19_034125_create_reply_table.php',
     'CreateRoleTable' => $baseDir . '/database/migrations/2017_08_19_033956_create_role_table.php',
     'CreateSectionTable' => $baseDir . '/database/migrations/2017_08_19_034058_create_section_table.php',
     'CreateTopicTable' => $baseDir . '/database/migrations/2017_08_19_034103_create_topic_table.php',
-    'CreateUserRoleTable' => $baseDir . '/database/migrations/2017_08_19_054539_create_user_role_table.php',
-    'CreateUsersTable' => $baseDir . '/database/migrations/2017_08_19_032117_create_users_table.php',
+    'CreateUsersTable' => $baseDir . '/database/migrations/2017_08_19_032117_create_user_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
     'ExampleTest' => $baseDir . '/tests/ExampleTest.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
@@ -471,6 +470,6 @@ return array(
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
-    'UpdateUserTable' => $baseDir . '/database/migrations/2017_08_19_060241_update_user_table.php',
+    'UpdateUserTable' => $baseDir . '/database/migrations/2017_08_23_092255_update_user_table.php',
     'UsersTableSeeder' => $baseDir . '/database/seeds/UsersTableSeeder.php',
 );

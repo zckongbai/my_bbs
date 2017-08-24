@@ -1,5 +1,5 @@
 @section('user')
-    @if(session('is_login'))
+    @if(session('user_id'))
         用户侧边栏
         <ul>
             <li><a href="{{ url('user/index') }}">我的首页</a></li>

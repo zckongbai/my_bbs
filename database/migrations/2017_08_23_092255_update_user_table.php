@@ -12,12 +12,9 @@ class UpdateUserTable extends Migration
      */
     public function up()
     {
-        // test update
-        // user add password salt
-
-        Schema::table('users', function (Blueprint $table){
-            $table->string('password',32);
-            $table->string('salt', 8);
+        //删除user salt字段
+        Schema::table('user', function (Blueprint $table){
+            $table->dropColumn('salt');
         });
 
     }
@@ -30,5 +27,8 @@ class UpdateUserTable extends Migration
     public function down()
     {
         //
+        Schema::table('user', function (Blueprint $table){
+            $table->string('salt', 32)->comment('盐值');
+        });
     }
 }

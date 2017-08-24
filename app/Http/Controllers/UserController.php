@@ -18,7 +18,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        parent::__construct();
     }
 
     /**
@@ -26,39 +26,36 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
-        if ('POST' == $request->getMethod()){
+        if ($request->isMethod('post')) {
 
             $this->validate($request, [
                 'name'  =>  'required',
-                'email' => 'required|email|unique:users',
+                'email' => 'required|email|unique:user',
                 'password' => 'required',
                 'surePassword' => 'same:password',
             ]);
 
-            $salt = str_random(8);
-            $password = md5($request->input('password') . $salt);
-            $roleId = DB::table('role')->where('name','user')->value('id');
-
+            $password = password_hash($request->input('password'), PASSWORD_DEFAULT);
+            $roleId = DB::table('role')->where('name', 'user')->value('id');
             $data = [
                 'name'  =>  $request->input('name'),
                 'email' =>  $request->input('email'),
                 'password' => $password,
-                'salt' => $salt,
                 'role_id' => $roleId,
             ];
+
             $user = User::create($data);
-            if ($user){
-                // 更新session
-                // self::cacheUserInfo($request, $user->id);
-
+            if ($user) {
+                // 缓存用户信息
+                self::cacheUserInfo($user);
                 // 改成事件
-                event(new \App\Events\UserRegisterEvent($user));
+                // event(new \App\Events\UserRegisterEvent($user));
 
-                return redirect('user');
+                $redirectUrl = session()->pull('backUrl', url('user'));
+                return redirect($redirectUrl);
             }
-
         }
-        return view('user.register');
+        return $this->view('user.register');
     }
 
 
@@ -69,7 +66,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        return view('user.index');
+        return $this->view('user.index');
     }
 
     /**
@@ -77,75 +74,79 @@ class UserController extends Controller
      * @param Request $request
      * @return bool
      */
-    public function loginLimit($ip)
+    protected function limitLoginByIp($ip)
     {
-        $time = Cache::remember($ip, 5, function (){
+        $key = 'limitLoginByIp:'.$ip;
+        $time = Cache::remember($key, 5, function () {
             return 1;
         });
-        if ($time < 3){
-            Cache::increment($ip, 1);
+        Log::info('login limit by ip', ['ip' => $ip, 'time' => $time]);
+
+        if ($time < 3) {
+            Cache::increment($key, 1);
             return true;
         }
         return false;
     }
 
+    /**
+     * 取消登录限制
+     * @param $ip
+     * @return bool
+     */
+    protected function delLimitLoginByIp($ip)
+    {
+        $key = 'limitLoginByIp:'.$ip;
+        Cache::forget($key);
+        Log::info(__METHOD__, ['ip' => $ip]);
+        return true;
+    }
+
 
     /**
-     *  登录
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View|\Laravel\Lumen\Http\Redirector
+     * @return
      */
     public function login(Request $request)
     {
-        if ($request->session()->get('is_login')){
+        if (self::checkUserIsLogin()) {
             return redirect('user/index');
         }
 
-        if ('POST' == $request->getMethod()) {
+        if ($request->isMethod('post')) {
+            // 次数限制
+            if (!$this->limitLoginByIp($request->getClientIp())) {
+                return $this->view('user.login')->withErrors(['errors'=>'ip 登录超过限制,5分钟后重试']);
+            }
+
             $this->validate($request, [
-                'email' => 'required|email|exists:users,email',
+                'email' => 'required|email|exists:user,email',
                 'password' => 'required',
             ]);
 
             $user = User::where('email', $request->input('email'))->first();
 
-            if (!$user){
-                return redirect('user/login')->withErrors(['message'=>'nobody! check email!'])->withInput($request->except('password'));
+            if (!password_verify($request->input('password'), $user->password)) {
+                return $this->view('user.login')->withErrors(['message'=>'password error!']);
             }
 
-            if ($user->password !== md5($request->input('password') . $user->salt)){
-                return redirect('user/login')->withErrors(['message'=>'password error!'])->withInput($request->except(['password']));
-            }
-
-            // session
-            // self::cacheUserInfo($request, $user->id);
+            // cache user id into session
+            $this->cacheUserInfo($user);
             // 改成登录事件
-            event(new UserLoginEvent($user));
+            // event(new UserLoginEvent($user));
+
+            // 清空登录限制
+            $this->delLimitLoginByIp($request->getClientIp());
 
             // write log
-            Log::info('user login:success', ['time' => date('Y-m-d H:i:s'), 'ip' => $request->getClientIp()]);
+            Log::info('user login success', ['id' => $user->id, 'ip' => $request->getClientIp()]);
 
             // back url
-            $redirectUrl = session()->pull('backUrl', url('user/index'));
-            return redirect($redirectUrl);
-
+            return $this->back();
         }
-        return view('user.login');
+        return $this->view('user.login');
     }
 
-    /**
-     * 改成事件后 废弃
-     * 初始化用户信息 : 游客
-     * @param Request $request
-     */
-    public static function initUser(Request $request)
-    {
-        if ($request->session()->get('is_login') || $request->session()->get('name') == User::VISITOR_NAME)
-        {
-            return true;
-        }
-        return self::cacheUserInfo($request);
-    }
 
     /**
      * 改成事件后 废弃
@@ -155,31 +156,13 @@ class UserController extends Controller
      * @param string $roleName
      * @return bool
      */
-    protected static function cacheUserInfo(Request $request, $id='', $roleName = User::VISITOR_NAME)
+    protected function cacheUserInfo(User $user)
     {
-        if ($id){
-            $user = User::find($id);
-            $data =  [
-                'is_login' => true,
-                'name'  =>$user->name,
-                'role_id' => $user->role_id,
-                'role_name' => $user->role->name,
-                'uid' => $user->id,
-            ];
-
-        } else {
-            $role = Role::where('name', $roleName)->first();
-            $data =  [
-                'is_login' => false,
-                'name'  => '',
-                'role_id' => $role->id,
-                'role_name' => $role->name,
-                'uid' => '',
-            ];
+        if ($user) {
+            setcookie('session', session_id(), 3600);
+            session()->put('user_id', $user->id);
+            return true;
         }
-        setcookie('session', session_id(), 7*24*3600);
-        $request->session()->put($data);
-        return true;
     }
 
     /**
@@ -187,13 +170,13 @@ class UserController extends Controller
      */
     public function logout(Request $request)
     {
-        // setcookie('session', session_id(), time()-1);
-        // $request->session()->flush();
+        setcookie('session', session_id(), time()-1);
+        $request->session()->pull('user_id');
 
         // 改成事件
-        event(new \App\Events\UserLogoutEvent());
+        // event(new \App\Events\UserLogoutEvent());
 
-        return view('user.logout');
+        return $this->view('user.logout');
     }
 
     /**
@@ -203,9 +186,9 @@ class UserController extends Controller
      */
     public function topics(Request $request)
     {
-        $topics = \App\Models\Topic::where('user_id', session('uid'))->paginate(10);
+        $topics = \App\Models\Topic::where('user_id', $this->user->id)->paginate(10);
 
-        return view('user.topics', ['topics'=>$topics]);
+        return $this->view('user.topics', ['topics'=>$topics]);
     }
 
     /**
@@ -215,9 +198,9 @@ class UserController extends Controller
      */
     public function sendReplies(Request $request)
     {
-        $replies = User::find(session('uid'))->replies()->paginate(10);
+        $replies = $this->user->replies()->paginate(10);
 
-        return view('user.sendReplies', ['replies'=>$replies]);
+        return $this->view('user.sendReplies', ['replies'=>$replies]);
     }
 
     /**
@@ -226,9 +209,18 @@ class UserController extends Controller
      */
     public function getReplies(Request $request)
     {
-        $replies = User::find(session('uid'))->getReplies()->paginate(10);
+        $replies = $this->user->getReplies()->paginate(10);
        // var_dump(DB::getQueryLog());
-        return view('user.getReplies', ['replies'=>$replies]);
+        return $this->view('user.getReplies', ['replies'=>$replies]);
+    }
+
+    /**
+     * 检查用户是否登录
+     * @return mixed
+     */
+    public static function checkUserIsLogin()
+    {
+        return session()->has('user_id');
     }
 
 }

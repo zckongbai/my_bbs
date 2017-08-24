@@ -10,8 +10,8 @@ namespace App\Http\Controllers;
 
 use App\Events\TopicEvent;
 use App\Models\Topic;
+use App\Models\Section;
 use App\Models\Reply;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Jobs\UpdateTopicJob;
 use Validator;
@@ -23,7 +23,7 @@ class TopicController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        parent::__construct();
     }
 
     /**
@@ -39,17 +39,17 @@ class TopicController extends Controller
         }
 
         $topic = Topic::find($id);
-       // // 更新浏览数
-       // $topic->click_number++;
-       // $topic->save();
+        // 更新浏览数
+        $topic->click_number++;
+        $topic->save();
 
-       // 事件方式 更新
-        event(new TopicEvent($topic, 'get'));
+        // 事件方式 更新
+        //  event(new TopicEvent($topic, 'get'));
 
-       // // job方式 更新
-       // $this->dispatch(new UpdateTopicJob($topic));
+        // job方式 更新
+        // $this->dispatch(new UpdateTopicJob($topic));
 
-        return view('topic.get', ['topic'=>$topic]);
+        return $this->view('topic.get', ['topic'=>$topic]);
     }
 
     /**
@@ -58,7 +58,7 @@ class TopicController extends Controller
      */
     public function add(Request $request)
     {
-        $sections = \App\Models\Section::all();
+        $sections = Section::all();
         if ("POST" == $request->getMethod()) {
             if (!$this->addLimit($request)){
                 return redirect('topic/add')->withErrors(['errors'=>'重复提交'])->withInput();
@@ -73,31 +73,31 @@ class TopicController extends Controller
             $topic = Topic::create([
                 'section_id' => $request->input('section_id'),
                 'status' => 1,
-                'user_id' => session('uid'),
+                'user_id' => $this->user->id,
                 'title' => $request->input('title'),
                 'content' => htmlspecialchars($request->input('content')),
             ]);
 
-            if ($topic){
-               // // 更新板块发帖数
-               // $section = \App\Models\Section::find($topic->section_id);
-               // $section->topic_number++;
-               // $section->save();
+            if ($topic) {
+               // 更新板块发帖数
+               $section = Section::find($topic->section_id);
+               $section->topic_number++;
+               $section->save();
 
-               // Log::info(
-               //     'user add topic',
-               //     ['id' => $topic->id, 'section_id' => $topic->section_id, 'topic_number' => $section->topic_number]
-               // );
+               Log::info(
+                   'user add topic',
+                   ['topic_id' => $topic->id, 'section_id' => $topic->section_id, 'topic_number' => $section->topic_number]
+               );
 
                 // 事件方式 更新板块发帖数
-                event(new TopicEvent($topic, 'add'));
+                // event(new TopicEvent($topic, 'add'));
 
-                return redirect(url('topic', ['id'=>$topic->id]));
+                return $this->back();
             }
 
         }
 
-        return view('topic.add', ['sections'=>$sections]);
+        return $this->view('topic.add', ['sections'=>$sections]);
     }
 
     /**
@@ -132,27 +132,43 @@ class TopicController extends Controller
 
         $topic = Topic::find($request->input('topic_id'));
 
+        // 添加回复
         $reply = new Reply;
-        $reply->user_id = session('uid');
+        $reply->user_id = $this->user->id;
         $reply->topic_id = $topic->id;
         $reply->topic_title = $topic->title;
-        $reply->floor = ++$topic->reply_number;
+        $reply->floor = $topic->reply_number + 1;
         $reply->content = $request->input('content');
         $reply->save();
 
-        // 更新楼层
+        // 更新帖子
+        $topic->reply_number++;
+        $topic->last_reply_at = date('Y-m-d H:i:s');
         $topic->save();
 
-        return redirect(url('topic', ['id'=>$topic->id]));
+        Log::info('topic reply success', ['topic'=>$topic->toArray(), 'reply'=>$reply->toArray()]);
+
+        return redirect()->route('topic/{id}', ['id'=>$topic->id]);
     }
 
     public function update(Request $request)
     {
 
     }
-    public function delete(Request $request)
-    {
 
+    /**
+     * 删除
+     * @param Request $request
+     * @param $id
+     * @return string
+     */
+    public function delete(Request $request, $id)
+    {
+        // Topic::destroy($id);
+        Topic::find($id)->delete();
+        Log::info('topic delete', ['id'=>$id, 'user_id'=>$this->user->id]);
+        // 返回前一页
+        return $this->back();
     }
     public function search(Request $request)
     {

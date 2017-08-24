@@ -12,9 +12,10 @@
 
     <a href="{{ url('home/index') }}">首页</a>
 
-    @if(session('is_login'))
+    @if(\App\Http\Controllers\UserController::checkUserIsLogin())
+    {{--@if(session('user_id'))--}}
         <ul>
-            <li><a href="{{ url('user/index') }}">{{ session('name') }}</a></li>
+            <li><a href="{{ url('user/index') }}">{{ $user->name }}</a></li>
             <li><a href="{{ url('user/logout') }}">退出</a></li>
         </ul>
     @else

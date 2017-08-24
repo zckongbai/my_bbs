@@ -18,12 +18,14 @@
                     <th>标题</th>
                     <th>浏览量</th>
                     <th>创建时间</th>
+                    <th>删除</th>
                 </tr>
                 @foreach($topics as $topic)
                 <tr>
                     <td><a href="{{ url('topic', ['id'=>$topic->id]) }}">{{ $topic->title }}</a></td>
                     <td>{{ $topic->click_number }}</td>
                     <td>{{ $topic->created_at }}</td>
+                    <td><a href="{{ route('topic/{id}/delete', ['id'=>$topic->id,'backUrl'=>url('user/topics')]) }}" onclick="return confirm('确认删除?');">删除</a></td>
                 </tr>
                 @endforeach
             </table>
@@ -34,9 +36,9 @@
         <!-- 分页 end -->
 
     @else
-        <h3>暂无发帖</h3>/;
+        <h4>暂无发帖</h4>
     @endif
-s
+
 @endsection
 
 

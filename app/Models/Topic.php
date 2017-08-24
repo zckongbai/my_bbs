@@ -14,7 +14,7 @@ class Topic extends Model {
     protected $table = 'topic';
     protected $fillable = ['section_id', 'user_id', 'title', 'content'];
 
-    protected $dates = ['delete_at'];
+    protected $dates = ['deleted_at'];
 
     public static $rules = [
         // Validation rules

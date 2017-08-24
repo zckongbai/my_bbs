@@ -22,10 +22,9 @@ class CreateTopicTable extends Migration
             $table->unsignedMediumInteger('click_number')->default(0)->comment('点击数');
             $table->unsignedMediumInteger('reply_number')->default(0)->comment('回复数');
             $table->unsignedTinyInteger('status')->default(1)->comment('帖子的评论状态,1是开放,2是关闭');
-            $table->enum('is_delete', [0,1])->default(0)->comment('帖子是否删除');
-            $table->timestamp('last_reply_time')->nullAllow()->comment('最后回帖时间');
-            $table->timestamps();
+            $table->timestamp('last_reply_at')->nullAllow()->comment('最后回帖时间');
             $table->softDeletes();
+            $table->timestamps();
             $table->index('user_id', 'index_user_id');
 
         });
@@ -40,5 +39,6 @@ class CreateTopicTable extends Migration
     public function down()
     {
         //
+        Schema::drop('topic');
     }
 }

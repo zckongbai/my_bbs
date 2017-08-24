@@ -16,6 +16,8 @@ use Log;
 
 class PermissionController extends Controller
 {
+
+
     /**
      * @param Request $request
      *
@@ -31,7 +33,7 @@ class PermissionController extends Controller
         ]);
 
         if ($validator->fails()){
-            return redirect('permission/add')->withErrors($validator)->withInput();
+            return $this->json(1001, ['message'=>'表单验证失败', 'error'=>$validator->errors()]);
         }
 
         $permission = new Permission();
@@ -41,59 +43,50 @@ class PermissionController extends Controller
         $permission->uses = $permission->controller . '@' . $permission->action;
         $permission->save();
 
-        return view('permission.add');
+        return $this->json(0, ['message'=>'success']);
     }
 
     public function update(Request $request)
     {
         $input = $request->all();
         $validator = Validator::make($input, [
-            'id'    =>  'required|numeric',
+            'id'    =>  'required|numeric|exists:permission',
             'name' => 'required',
             'controller' => 'required',
             'action' => 'required',
-            'remark' => 'max:64'
         ]);
         if ($validator->fails()){
-            $error = $validator->errors();
-            return json_encode(['code'=>1001, 'message'=>'表单验证失败', 'error'=>$error]);
+            return $this->json(1001, ['message'=>'表单验证失败', 'error'=>$validator->errors()]);
         }
 
-        try {
-            $res = DB::table('permission')
-                ->where('id', $input['id'])
-                ->update($input);
-        }catch (\Exception $e) {
-            $errorMsg = $e->getMessage();
-            Log::info('permission add failed', ['errorMsg'=>$errorMsg, 'input'=>$input]);
-            return json_encode(['code'=>1002, 'message'=>'失败', 'error'=>$errorMsg]);
-        }
-        return json_encode(['code'=>0, 'message'=>'success','redirectUrl'=>url('permission/index')]);
+        $permission = Permission::find($input['id']);
+        $permission->name = $input['name'];
+        $permission->controller = $input['controller'];
+        $permission->action = $input['action'];
+        $permission->save();
+
+        return $this->json(0, ['message'=>'success']);
     }
 
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-        if (empty($id) || ! is_numeric($id)){
-            return json_encode(['code'=>1001, 'message'=>'id不正确']);
+        if (empty($id) || !is_numeric($id)){
+            return $this->json(1001, ['message'=>'权限不存在']);
         }
 
-        $res = DB::table('permission')->where('id', $id)->delete();
+        Permission::destroy($id);
 
-        if (false === $res) {
-            return json_encode(['code'=>1003, 'message'=>'failed','redirectUrl'=>url('permission/index')]);
+        $res = Log::info('permission delete', ['operator'=>$this->user->id]);
+
+        if (false == $res) {
+            return $this->json(5000, ['message'=>'failed']);
         }
-        return json_encode(['code'=>0, 'message'=>'success','redirectUrl'=>url('permission/index')]);
+        return $this->json(0, ['message'=>'success']);
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $pIndex = $request->input('p', 1);
-        $pSize = 10;
-        $data = DB::table('permission')
-            ->offset($pSize * ($pIndex -1))
-            ->limit($pSize)
-            ->get();
-
-        return json_encode(['code'=>0, 'message'=>'success', 'data'=>$data]);
+        $data = Permission::paginate(10)->toArray();
+        return $this->json(0, ['message'=>'success', 'data'=>$data]);
     }
 }

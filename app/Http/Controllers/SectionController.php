@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Section;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Validator;
@@ -22,40 +23,44 @@ class SectionController extends Controller
      */
     public function add(Request $request)
     {
-        if ('POST' == $request->getMethod()) {
-
-//            $this->validate($request, [
-//                'name' => 'required|max:64',
-//            ]);
+        if ($request->isMethod('post')) {
 
             $input = $request->all();
             if (empty($input)){
-                return view('section.add', ['errorMsg' => '表单不能为空']);
+                return $this->view('section.add')->withErrors(['form' => '表单不能为空']);
             }
             $validator = Validator::make($input, [
-                'name' => 'required|max:64',
+                'name' => 'required|max:64|unique:section',
             ]);
 
             if ($validator->fails()) {
-                $error = $validator->errors();
-                return view('section.add', ['error' => $error]);
+                return $this->view('section.add', ['error' => $validator->errors()]);
             }
 
-            try {
-                DB::table('section')->insert(['name'=>$input['name']]);
-            } catch (\Exception $e) {
-                $errorMsg = $e->getMessage();
-                return view('section.add', ['errorMsg'=>$errorMsg]);
-            }
+            $section = Section::create($input);
 
-            Log::info(__CLASS__ .':success', ['time'=>date('Y-m-d H:i:s'),'input'=>$input]);
-            return redirect('section/index');
+            if ($section){
+                Log::info('section add success', ['operator' => $this->user->id, 'input' => $input]);
+                return $this->view('section/index');
+            }
+            return $this->view('section/add')->withErrors(['form' => '失败'])->withInput();
         }
-        return view('section.add');
+        return $this->view('section.add');
     }
-    public function update(Request $request)
-    {
 
+    public function update(Request $request, $id)
+    {
+        $section = Section::find($id);
+        if ($request->isMethod('post')){
+            $input = $request->all();
+            $validator = VAlidator::make($input, [
+                'name' => 'required|max:64|unique:section',
+            ]);
+            if ($validator->fails()){
+                return $this->view('section.update')->withErrors($validator);
+            }
+        }
+        return $this->view('section.update', ['section' => $section]);
     }
     public function delete(Request $request)
     {
@@ -68,7 +73,6 @@ class SectionController extends Controller
 
     public static function getAll()
     {
-        return DB::table('section')->get();
     }
 
 }

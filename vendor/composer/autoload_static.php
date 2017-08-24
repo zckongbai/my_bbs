@@ -420,15 +420,14 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
     );
 
     public static $classMap = array (
-        'CreateJobsTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_22_032402_create_jobs_table.php',
+        'CreateJobsTable' => __DIR__ . '/../..',
         'CreatePermissionRoleTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_21_061201_create_permission_role_table.php',
         'CreatePermissionTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034022_create_permission_table.php',
         'CreateReplyTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034125_create_reply_table.php',
         'CreateRoleTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_033956_create_role_table.php',
         'CreateSectionTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034058_create_section_table.php',
         'CreateTopicTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_034103_create_topic_table.php',
-        'CreateUserRoleTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_054539_create_user_role_table.php',
-        'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_032117_create_users_table.php',
+        'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_032117_create_user_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'ExampleTest' => __DIR__ . '/../..' . '/tests/ExampleTest.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
@@ -885,7 +884,7 @@ class ComposerStaticInit0423c07772e6837858b044783ba5f9d4
         'SessionHandlerInterface' => __DIR__ . '/..' . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
         'TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
-        'UpdateUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_19_060241_update_user_table.php',
+        'UpdateUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_23_092255_update_user_table.php',
         'UsersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UsersTableSeeder.php',
     );
 

@@ -21,8 +21,8 @@ class CreateReplyTable extends Migration
             $table->string('topic_title', 64)->comment('帖子的标题');
             $table->unsignedMediumInteger('floor')->comment('楼层');
             $table->string('content', 255)->comment('内容');
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
             $table->index(['user_id','topic_id'], 'index_uid_and_tid')->change();
         });
 

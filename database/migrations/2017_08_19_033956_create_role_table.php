@@ -16,8 +16,8 @@ class CreateRoleTable extends Migration
         Schema::create('role', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name', 32)->comment('名称');
+            $table->softDeletes();
             $table->timestamps();
-
             $table->index('name', 'index_name');
         });
 
@@ -31,5 +31,6 @@ class CreateRoleTable extends Migration
     public function down()
     {
         //
+        Schema::drop('role');
     }
 }

@@ -14,16 +14,17 @@ class CreateUsersTable extends Migration
     {
         // 用户表
 
-       Schema::create('users', function (Blueprint $table) {
+        Schema::create('user', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 32);
             $table->string('email', 64);
             $table->unsignedSmallInteger('role_id');
-            $table->enum('is_delete', [0,1])->default(0);
-            $table->timestamps();
+            $table->string('password', 255);
+            $table->string('salt', 32)->comment('盐值');
             $table->softDeletes();
+            $table->timestamps();
 
-       });
+        });
     }
 
     /**
@@ -34,5 +35,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         //
+        Schema::drop('users');
     }
 }

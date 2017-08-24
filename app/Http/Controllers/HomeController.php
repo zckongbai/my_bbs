@@ -11,15 +11,15 @@ class HomeController extends Controller
 
 	public function __construct()
 	{
+	    parent::__construct();
 		$this->middleware('auth');
-
 	}
 
 	 public function index(Request $request)
 	{
 	    $sections = Section::all();
 
-        return view('home.index', ['sections'=>$sections]);
+        return $this->view('home.index', ['sections'=>$sections]);
 	}
 
 	/**
