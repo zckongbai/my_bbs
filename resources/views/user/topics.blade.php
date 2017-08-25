@@ -25,7 +25,7 @@
                     <td><a href="{{ url('topic', ['id'=>$topic->id]) }}">{{ $topic->title }}</a></td>
                     <td>{{ $topic->click_number }}</td>
                     <td>{{ $topic->created_at }}</td>
-                    <td><a href="{{ route('topic/{id}/delete', ['id'=>$topic->id,'backUrl'=>url('user/topics')]) }}" onclick="return confirm('确认删除?');">删除</a></td>
+                    <td><a href="{{ route('topic/delete', ['id'=>$topic->id,'backUrl'=>url('user/topics')]) }}" onclick="return confirm('确认删除?');">删除</a></td>
                 </tr>
                 @endforeach
             </table>

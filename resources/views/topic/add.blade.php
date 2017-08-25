@@ -11,7 +11,7 @@
 
 @section('content')
 
-<form id="topicAddFm" action="<?php echo url('topic/add');?>" method="POST">
+<form id="topicAddFm" action="<?php echo url('topic/doAdd');?>" method="POST">
 
     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
 
@@ -22,11 +22,11 @@
         @endforeach
     </select><br /><br />
 
-    标题: <input type="text" name="title" id="title" /><br /><br />
+    标题: <input type="text" name="title" id="title" value="{{ old('title') }}" /><br /><br />
 
-    内容: <textarea name="content" id="content" rows="10" cols="30"></textarea><br /><br />
+    内容: <textarea name="content" id="content" rows="10" cols="30">{{ old('content') }}</textarea><br /><br />
 
-    <input type="submit" value="发帖" onclick="checkForm()"/>
+    <input type="submit" value="发帖" onclick="return checkForm();"/>
 
 
 </form>

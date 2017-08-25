@@ -37,7 +37,7 @@ class UserAuthMiddleware
 
         Log::info(
             'user auth handle',
-            ['uses' => $uses, 'user_id' => session('user_id'), 'ip' => $request->getClientIp()]
+            ['uses' => $uses, 'userId' => session('userId'), 'ip' => $request->getClientIp()]
         );
 
         // 检查权限
@@ -64,7 +64,7 @@ class UserAuthMiddleware
      */
     protected function checkPermission($uses)
     {
-        return User::find(session('user_id'))->checkPermissionByUses($uses);
+        return User::find(session('userId'))->checkPermissionByUses($uses);
     }
 
 

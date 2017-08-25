@@ -28,8 +28,8 @@
                     <td>{{ $topic->reply_number }}</td>
                 </tr>
             @empty
-                <h4>暂无板块</h4>
-                <a href="{{ url('section/add') }}">去添加</a>
+                <h4>暂无发帖</h4>
+                <a href="{{ url('topic/add') }}">去发帖</a>
             @endforelse
         </table>
 

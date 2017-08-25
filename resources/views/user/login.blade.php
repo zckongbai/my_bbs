@@ -13,9 +13,9 @@
 
     <!-- 登录表单 begin-->
     <div>
-        <form id="loginFm" action="" method="post">
+        <form id="loginFm" action="{{ url('user/doLogin') }}" method="post">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-            邮箱: <input type="email" name="email" id="email" value="{{ $email or ''}}" /><br />
+            邮箱: <input type="text" name="email" id="email" value="{{ old('email')  }}" /><br />
             密码: <input type="password" minlength="6" maxlength="32" name="password" id="password"><br/>
             <input type="button" onclick="login()" value="登录" id="loginBtn" />
         </form>

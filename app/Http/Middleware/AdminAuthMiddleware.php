@@ -8,7 +8,7 @@
 
 namespace app\Http\Middleware;
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Models\User;
 use Closure;
 use Illuminate\Support\Facades\DB;
@@ -20,18 +20,18 @@ class AdminAuthMiddleware
     {
         // DB::enableQueryLog();
 
-        // 先检查登录
-        if (!UserController::checkUserIsLogin()){
-            return redirect('admin/login');
-        }
-
-        $uses = $this->getUses($request);
-
-        // 检查权限
-        if (!$this->checkPermission($uses)){
-            return redirect('admin/login');
-        }
-        // var_dump(DB::getQueryLog());
+        // // 先检查登录
+        // if (!AdminController::checkUserIsLogin()){
+        //     return redirect('admin/login');
+        // }
+        //
+        // $uses = $this->getUses($request);
+        //
+        // // 检查权限
+        // if (!$this->checkPermission($uses)){
+        //     return redirect('admin/login');
+        // }
+        // // var_dump(DB::getQueryLog());
 
         return $next($request);
     }

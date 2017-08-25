@@ -10,7 +10,7 @@
 @section('content')
     <p>注册。</p>
 
-    <form id="registerFm" action="" method="post">
+    <form id="registerFm" action="{{ url('user/doRegister') }}" method="post">
         <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
         名称: <input type="text" name="name" id="name" value="{{ old('name') }}" /><br />
         邮箱: <input type="email" name="email" id="email" value="{{ old('email') }}" /><br />
@@ -38,7 +38,6 @@
     function register() {
 
         if (false == checkForm()) {
-            alert(1);
             return false;
         }
 

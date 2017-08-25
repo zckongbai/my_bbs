@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * 帖子类别
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  */
 class Section extends Model {
+    use SoftDeletes;
 
     protected $table = 'section';
     protected $fillable = [];

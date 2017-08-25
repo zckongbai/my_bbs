@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * 帖子
@@ -11,10 +12,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Topic extends Model {
 
+    use SoftDeletes;
+
     protected $table = 'topic';
     protected $fillable = ['section_id', 'user_id', 'title', 'content'];
-
-    protected $dates = ['deleted_at'];
 
     public static $rules = [
         // Validation rules

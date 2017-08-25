@@ -26,10 +26,12 @@ $app->get('403', function () use ($app) {
 $app->group(['namespace' => 'App\Http\Controllers', ['middleware' => 'auth']], function ($app){
 
     /**
-     * user login
+     * user
      */
     $app->get('user/login', 'UserController@login');
-    $app->post('user/login', 'UserController@login');
+    $app->post('user/doLogin', 'UserController@doLogin');
+    $app->get('user/register', 'UserController@register');
+    $app->post('user/doRegister', 'UserController@doRegister');
 
     /**
      * home
@@ -42,13 +44,14 @@ $app->group(['namespace' => 'App\Http\Controllers', ['middleware' => 'auth']], f
      * admin login
      */
     $app->get('admin/login', 'AdminController@login');
-    $app->post('admin/login', 'AdminController@login');
+    $app->post('admin/doLogin', 'AdminController@doLogin');
 
     /**
      * section
      */
     $app->get('section', ['uses'=>'SectionController@index']);
     $app->get('section/{id}/topics', ['uses'=>'SectionController@topics', 'as'=>'section/topics']);
+
 
 });
 
@@ -59,8 +62,6 @@ $app->group(['middleware'=>'user', 'namespace' => 'App\Http\Controllers'],functi
      */
     $app->get('user', 'UserController@index');
     $app->get('user/index', 'UserController@index');
-    $app->get('user/register', 'UserController@register');
-    $app->post('user/register', 'UserController@register');
     $app->get('user/logout', 'UserController@logout');
     $app->get('user/getReplies', 'UserController@getReplies');
     $app->get('user/sendReplies', 'UserController@sendReplies');
@@ -70,27 +71,18 @@ $app->group(['middleware'=>'user', 'namespace' => 'App\Http\Controllers'],functi
      * topic
      */
     $app->get('topic/add', ['uses'=>'TopicController@add']);
-    $app->post('topic/add', ['uses'=>'TopicController@add']);
+    $app->post('topic/doAdd', ['uses'=>'TopicController@doAdd']);
     $app->post('topic/reply', ['uses' => 'TopicController@reply']);
-    $app->get('topic/{id}', ['uses' => 'TopicController@get', 'as'=>'topic/{id}']);
-    $app->get('topic/{id}/delete', ['uses' => 'TopicController@delete', 'as'=>'topic/{id}/delete']);
+    $app->get('topic/{id}', ['uses' => 'TopicController@get', 'as'=>'topic']);
+    $app->get('topic/{id}/delete', ['uses' => 'TopicController@delete', 'as'=>'topic/delete']);
 
 });
 
 $app->group(['middleware' => 'admin', 'namespace' => 'App\Http\Controllers'], function ($app){
     /**
-     * Routes for resource admin
-     */
-    $app->get('admin', 'AdminController@index');
-    $app->get('admin/login', 'AdminController@login');
-    $app->post('admin/add', 'AdminController@add');
-    $app->post('admin/{id}', 'AdminController@update');
-    $app->delete('admin/{id}', 'AdminController@update');
-
-    /**
      * permission
      */
-    $app->get('permission/index', ['uses'=>'PermissionController@index']);
+    $app->get('permission', ['uses'=>'PermissionController@index']);
     $app->post('permission/add', ['uses'=>'PermissionController@add']);
     $app->post('permission/update', ['uses'=>'PermissionController@update']);
     $app->get('permission/{id}/delete', ['uses'=>'PermissionController@delete']);
@@ -99,7 +91,6 @@ $app->group(['middleware' => 'admin', 'namespace' => 'App\Http\Controllers'], fu
      * role
      */
     $app->get('role', ['uses'=>'RoleController@index']);
-    $app->get('role/add', ['uses'=>'RoleController@add']);
     $app->post('role/add', ['uses'=>'RoleController@add']);
     $app->post('role/update', ['uses'=>'RoleController@update']);
     $app->get('role/{id}/delete', ['uses'=>'RoleController@delete']);
@@ -108,8 +99,9 @@ $app->group(['middleware' => 'admin', 'namespace' => 'App\Http\Controllers'], fu
      * section
      */
     $app->get('section/add', ['uses'=>'SectionController@add']);
-    $app->post('section/add', ['uses'=>'SectionController@add']);
-    $app->post('section/{id}/update', ['uses'=>'SectionController@update', 'as'=>'section/update']);
+    $app->post('section/doAdd', ['uses'=>'SectionController@doAdd']);
+    $app->post('section/update', ['uses'=>'SectionController@update', 'as'=>'section/update']);
     $app->get('section/{id}/delete', ['uses'=>'SectionController@delete', 'as'=>'section/delete']);
     $app->get('section/{id}', ['uses'=>'SectionController@get']);
 });
+
