@@ -10,7 +10,7 @@
 
 @section('content')
     <div>
-        <form action="{{ url('section/update') }}" method="post" onsubmit="return checkForm();">
+        <form action="{{ route('section/update') }}" method="post" onsubmit="return checkForm();">
             <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <input type="hidden" value="{{ $section->id }}"  >
             <input type="text" id="name" name="name" value="{{ $section->name }}">

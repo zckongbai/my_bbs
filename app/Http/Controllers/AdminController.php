@@ -11,9 +11,20 @@ class AdminController extends Controller {
         return __CLASS__;
     }
 
-    public function login(Request $request)
+    public function login()
     {
         session()->put('backUrl', url('home'));
         return redirect('home');
     }
+
+    public function doLogin(Request $request)
+    {
+
+    }
+
+    public static function checkUserIsLogin()
+    {
+
+    }
+
 }

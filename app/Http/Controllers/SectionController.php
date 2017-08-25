@@ -15,61 +15,68 @@ use Log;
 
 class SectionController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return string
-     */
-    public function add(Request $request)
-    {
-        if ($request->isMethod('post')) {
-
-            $this->validate($request, [
-                'name' => 'required|max:64|unique:section',
-            ]);
-
-            $section = new Section;
-            $section->name = $request->input('name');
-            $result = $section->save();
-
-            if ($result){
-                Log::info('section add success', ['operator' => $this->user->id, ['section'=>$section->toArray()]]);
-                return redirect('section');
-            }
-            return $this->view('section.add')->withErrors(['errors' => '失败']);
-        }
-        return $this->view('section.add');
-    }
-
-    public function update(Request $request, $id)
-    {
-        $section = Section::find($id);
-        if ($request->isMethod('post')){
-            $input = $request->all();
-            $validator = Validator::make($input, [
-                'name' => 'required|max:64|unique:section',
-            ]);
-            if ($validator->fails()){
-                return $this->view('section.update')->withErrors($validator);
-            }
-
-            $section->name = $input['name'];
-            $section->save();
-
-            return redirect(url('section', ['id'=>$section->id]));
-
-        }
-        return $this->view('section.update', ['section' => $section]);
-    }
-    public function delete(Request $request)
-    {
-
-    }
     public function index(Request $request)
     {
         $sections = Section::paginate(10);
         return $this->view('section.index', ['sections'=>$sections]);
     }
 
+    /**
+     * 添加页面
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
+    public function add(Request $request)
+    {
+        return $this->view('section.add');
+    }
+
+    /**
+     * 添加
+     * @param Request $request
+     */
+    public function doAdd(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:64|unique:section',
+        ]);
+
+        $section = new Section;
+        $section->name = $request->input('name');
+        $result = $section->save();
+
+        if ($result){
+            Log::info('section add success', ['operator' => $this->user->id, ['section'=>$section->toArray()]]);
+            return redirect('section');
+        }
+        return redirect('section/add')->withErrors(['errors' => '失败']);
+    }
+
+    public function update(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|exists:section,id',
+            'name' => 'required|max:64|unique:section',
+        ]);
+
+        $id = $request->input('id');
+
+        $result = Section::where('id', $id)->update([
+            'name' => $request->input('name'),
+        ]);
+
+        if (false == $result) {
+            return $this->back();
+        }
+        return redirect(url('section', ['id'=>$id]));
+    }
+
+    public function delete(Request $request, $id)
+    {
+        Section::find($id)->delete();
+        Log::info(__METHOD__, ['id'=>$id, 'operator'=>$this->user->id]);
+        return $this->back();
+    }
     public function get($id)
     {
         $section = Section::find($id);

@@ -11,8 +11,8 @@ class Controller extends BaseController
 
     public function __construct()
     {
-        $user_id = session('user_id');
-        $this->user = $user_id ? User::find($user_id) : '';
+        $userId = session('userId');
+        $this->user = $userId ? User::find($userId) : null;
     }
 
     /**
@@ -23,8 +23,7 @@ class Controller extends BaseController
     protected function view($name, $data = [])
     {
         $common = $this->getCommonViewData();
-        $formData = $this->getFromData();
-        return view($name, array_merge($common, $formData, $data));
+        return view($name, array_merge($common, $data));
     }
 
     /**
@@ -37,14 +36,6 @@ class Controller extends BaseController
             $data['user'] = $this->user;
         }
         return $data;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getFromData()
-    {
-        return app('request')->except('password');
     }
 
     /**

@@ -18,8 +18,6 @@ class User extends Model {
         'email' =>  'required|email|unique:users',
     ];
 
-    const VISITOR_NAME = 'visitor';
-
     // Relationships
 
     /**

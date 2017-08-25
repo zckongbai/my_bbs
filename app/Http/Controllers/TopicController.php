@@ -45,48 +45,58 @@ class TopicController extends Controller
     }
 
     /**
+     * 添加页面
      * @param Request $request
-     * @return string
+     * @return \Illuminate\View\View
      */
     public function add(Request $request)
     {
         $sections = Section::all();
-        if ("POST" == $request->getMethod()) {
-            if (!$this->addLimit($request)){
-                return redirect('topic/add')->withErrors(['errors'=>'重复提交'])->withInput();
-            }
-
-            $this->validate($request, [
-                'section_id' => 'required|numeric|exists:section,id',
-                'title' => 'required|max:128',
-                'content' => 'required',
-            ]);
-
-            $topic = Topic::create([
-                'section_id' => $request->input('section_id'),
-                'status' => 1,
-                'user_id' => $this->user->id,
-                'title' => $request->input('title'),
-                'content' => htmlspecialchars($request->input('content')),
-            ]);
-
-            if ($topic) {
-               // 更新板块发帖数
-               $section = Section::find($topic->section_id);
-               $section->topic_number++;
-               $section->save();
-
-               Log::info(
-                   'user add topic',
-                   ['topic_id' => $topic->id, 'section_id' => $topic->section_id, 'topic_number' => $section->topic_number]
-               );
-
-                return $this->back();
-            }
-
-        }
 
         return $this->view('topic.add', ['sections'=>$sections]);
+    }
+
+    /**
+     * 添加
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Laravel\Lumen\Http\Redirector
+     */
+    public function doAdd(Request $request)
+    {
+        if (!$this->addLimit($request)){
+            return redirect('topic/add')->withErrors(['errorMsg'=>'重复提交'])->withInput();
+        }
+
+        $this->validate($request, [
+            'section_id' => 'required|numeric|exists:section,id',
+            'title' => 'required|max:128',
+            'content' => 'required',
+        ]);
+
+        $topic = Topic::create([
+            'section_id' => $request->input('section_id'),
+            'status' => 1,
+            'user_id' => $this->user->id,
+            'title' => $request->input('title'),
+            'content' => htmlspecialchars($request->input('content')),
+        ]);
+
+        if ($topic) {
+            // 更新板块发帖数
+            $section = Section::find($topic->section_id);
+            $section->topic_number++;
+            $section->save();
+
+            Log::info(
+                'user add topic',
+                ['topic' => $topic->id, 'section' => $section->id]
+            );
+
+            return redirect('user/topics');
+
+        }
+        return redirect('topic/add')->withErrors(['errorMsg'=>'系统繁忙, 稍后再试'])->withInput();
+
     }
 
     /**
@@ -137,7 +147,7 @@ class TopicController extends Controller
 
         Log::info('topic reply success', ['topic'=>$topic->toArray(), 'reply'=>$reply->toArray()]);
 
-        return redirect()->route('topic/{id}', ['id'=>$topic->id]);
+        return redirect()->route('topic', ['id'=>$topic->id]);
     }
 
     public function update(Request $request)
@@ -154,7 +164,7 @@ class TopicController extends Controller
     public function delete(Request $request, $id)
     {
         Topic::find($id)->delete();
-        Log::info('topic delete', ['id'=>$id, 'user_id'=>$this->user->id]);
+        Log::info('topic delete', ['id'=>$id, 'user'=>$this->user->id]);
         // 返回前一页
         return $this->back();
     }
