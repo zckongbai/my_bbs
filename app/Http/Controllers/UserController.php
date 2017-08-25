@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Validator;
 use Cache;
 use Log;
-use App\Events\UserLoginEvent;
 
 
 class UserController extends Controller
@@ -47,9 +44,7 @@ class UserController extends Controller
             $user = User::create($data);
             if ($user) {
                 // 缓存用户信息
-                self::cacheUserInfo($user);
-                // 改成事件
-                // event(new \App\Events\UserRegisterEvent($user));
+                $this->cacheUserInfo($user);
 
                 $redirectUrl = session()->pull('backUrl', url('user'));
                 return redirect($redirectUrl);
@@ -132,8 +127,6 @@ class UserController extends Controller
 
             // cache user id into session
             $this->cacheUserInfo($user);
-            // 改成登录事件
-            // event(new UserLoginEvent($user));
 
             // 清空登录限制
             $this->delLimitLoginByIp($request->getClientIp());
@@ -149,7 +142,6 @@ class UserController extends Controller
 
 
     /**
-     * 改成事件后 废弃
      * 缓存用户信息
      * @param Request $request
      * @param string $id
@@ -172,9 +164,6 @@ class UserController extends Controller
     {
         setcookie('session', session_id(), time()-1);
         $request->session()->pull('user_id');
-
-        // 改成事件
-        // event(new \App\Events\UserLogoutEvent());
 
         return $this->view('user.logout');
     }

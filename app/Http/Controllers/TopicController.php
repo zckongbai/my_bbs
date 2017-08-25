@@ -8,12 +8,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TopicEvent;
 use App\Models\Topic;
 use App\Models\Section;
 use App\Models\Reply;
 use Illuminate\Http\Request;
-use App\Jobs\UpdateTopicJob;
 use Validator;
 use Cache;
 use Log;
@@ -42,12 +40,6 @@ class TopicController extends Controller
         // 更新浏览数
         $topic->click_number++;
         $topic->save();
-
-        // 事件方式 更新
-        //  event(new TopicEvent($topic, 'get'));
-
-        // job方式 更新
-        // $this->dispatch(new UpdateTopicJob($topic));
 
         return $this->view('topic.get', ['topic'=>$topic]);
     }
@@ -88,9 +80,6 @@ class TopicController extends Controller
                    'user add topic',
                    ['topic_id' => $topic->id, 'section_id' => $topic->section_id, 'topic_number' => $section->topic_number]
                );
-
-                // 事件方式 更新板块发帖数
-                // event(new TopicEvent($topic, 'add'));
 
                 return $this->back();
             }
@@ -164,7 +153,6 @@ class TopicController extends Controller
      */
     public function delete(Request $request, $id)
     {
-        // Topic::destroy($id);
         Topic::find($id)->delete();
         Log::info('topic delete', ['id'=>$id, 'user_id'=>$this->user->id]);
         // 返回前一页

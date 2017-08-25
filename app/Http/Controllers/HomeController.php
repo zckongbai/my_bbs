@@ -17,7 +17,7 @@ class HomeController extends Controller
 
 	 public function index(Request $request)
 	{
-	    $sections = Section::all();
+	    $sections = Section::paginate(10);
 
         return $this->view('home.index', ['sections'=>$sections]);
 	}
