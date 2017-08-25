@@ -25,17 +25,11 @@
     </div>
     <!-- 板块 end -->
 
+
     <!-- 错误信息 begin-->
-    <div class="alert alert-danger">
-        @if(isset($errors))
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        @endif
-    </div>
+    @include('common.errors')
     <!-- 错误信息 end -->
+
 @endsection
 
 

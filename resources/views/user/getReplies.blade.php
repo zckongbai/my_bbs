@@ -10,6 +10,7 @@
 @endsection
 
 @section('content')
+    <!-- 列表 begin -->
     <div>
     @if(count($replies))
         <p>收到回复</p>
@@ -31,6 +32,7 @@
         </table>
     @endif
     </div>
+    <!-- 列表 end -->
 
     <!-- 分页 begin -->
     <?php echo $replies->render(); ?>

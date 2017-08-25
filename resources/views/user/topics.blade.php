@@ -12,6 +12,7 @@
 @section('content')
 
     @if(count($topics) > 0)
+        <!-- 列表 begin -->
         <div>
             <table>
                 <tr>
@@ -30,6 +31,7 @@
                 @endforeach
             </table>
         </div>
+        <!-- 列表 end -->
 
         <!-- 分页 begin -->
         <?php echo $topics->render(); ?>

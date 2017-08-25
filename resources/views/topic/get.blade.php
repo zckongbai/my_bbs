@@ -60,18 +60,9 @@
     <!-- 回复end -->
     @endif
 
-    @if (count($errors) > 0)
     <!-- 错误信息 begin-->
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+    @include('common.errors')
     <!-- 错误信息 end -->
-    @endif
-
 
 @endsection
 

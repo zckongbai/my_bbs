@@ -10,37 +10,34 @@
 @endsection
 
 @section('content')
+    <!-- 板块添加form begin -->
+    <div>
+        <form id="topicAddFm" action="<?php echo url('topic/doAdd');?>" method="POST">
 
-<form id="topicAddFm" action="<?php echo url('topic/doAdd');?>" method="POST">
+            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
 
-    <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+            板块:
+            <select name="section_id">
+                @foreach ($sections as $section)
+                    <option @if ($sections->first() == $section) selected @endif value="{{ $section['id'] }}">{{ $section['name'] }}</option>
+                @endforeach
+            </select><br /><br />
 
-    板块:
-    <select name="section_id">
-        @foreach ($sections as $section)
-            <option @if ($sections->first() == $section) selected @endif value="{{ $section['id'] }}">{{ $section['name'] }}</option>
-        @endforeach
-    </select><br /><br />
+            标题: <input type="text" name="title" id="title" value="{{ old('title') }}" /><br /><br />
 
-    标题: <input type="text" name="title" id="title" value="{{ old('title') }}" /><br /><br />
+            内容: <textarea name="content" id="content" rows="10" cols="30">{{ old('content') }}</textarea><br /><br />
 
-    内容: <textarea name="content" id="content" rows="10" cols="30">{{ old('content') }}</textarea><br /><br />
+            <input type="submit" value="发帖" onclick="return checkForm();"/>
 
-    <input type="submit" value="发帖" onclick="return checkForm();"/>
-
-
-</form>
-
-
-@if (count($errors) > 0)
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+        </form>
     </div>
-@endif
+    <!-- 板块添加form end -->
+
+
+    <!-- 错误信息 begin-->
+    @include('common.errors')
+    <!-- 错误信息 end -->
+
 
 @endsection
 

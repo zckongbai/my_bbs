@@ -8,25 +8,25 @@
 @endsection
 
 @section('content')
-    <p>注册。</p>
+    <!-- 注册 begin -->
+    <div>
+        <p>注册。</p>
 
-    <form id="registerFm" action="{{ url('user/doRegister') }}" method="post">
-        <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-        名称: <input type="text" name="name" id="name" value="{{ old('name') }}" /><br />
-        邮箱: <input type="email" name="email" id="email" value="{{ old('email') }}" /><br />
-        密码: <input type="password" minlength="6" maxlength="32" name="password" id="password"><br/>
-        确认密码: <input type="password" minlength="6" maxlength="32" name="surePassword" id="surePassword"><br/>
-        <input type="button" onclick="register()" value="注册" id="registerBtn" />
-    </form>
-        @if (count($errors) > 0)
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <form id="registerFm" action="{{ url('user/doRegister') }}" method="post">
+            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+            名称: <input type="text" name="name" id="name" value="{{ old('name') }}" /><br />
+            邮箱: <input type="email" name="email" id="email" value="{{ old('email') }}" /><br />
+            密码: <input type="password" minlength="6" maxlength="32" name="password" id="password"><br/>
+            确认密码: <input type="password" minlength="6" maxlength="32" name="surePassword" id="surePassword"><br/>
+            <input type="button" onclick="register()" value="注册" id="registerBtn" />
+        </form>
+    </div>
+    <!-- 注册 end -->
+
+    <!-- 错误信息 begin-->
+    @include('common.errors')
+    <!-- 错误信息 end -->
+
 @endsection
 
 @section('script')
